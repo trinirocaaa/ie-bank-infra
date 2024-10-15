@@ -12,10 +12,10 @@ on:
       paths-ignore:
         - 'scripts/**'
 
+
 env:
-  RESOURCE_GROUP_DEV: BCSAI2024-DEVOPS-STUDENTS-B-DEV
-  RESOURCE_GROUP_UAT: BCSAI2024-DEVOPS-STUDENTS-B-UAT
- 
+  RESOURCE_GROUP_DEV_ID: /subscriptions/e0b9cada-61bc-4b5a-bd7a-52c606726b3b/resourceGroups/BCSAI2024-DEVOPS-STUDENTS-B-DEV
+  RESOURCE_GROUP_UAT_ID: /subscriptions/e0b9cada-61bc-4b5a-bd7a-52c606726b3b/resourceGroups/BCSAI2024-DEVOPS-STUDENTS-B-UAT
   SUBSCRIPTION_ID: e0b9cada-61bc-4b5a-bd7a-52c606726b3b
   USER_ALIAS: troca
 
@@ -64,10 +64,11 @@ jobs:
       uses: azure/arm-deploy@v2
       with:
         subscriptionId: ${{ env.SUBSCRIPTION_ID }}
-        resourceGroupName: ${{ env.RESOURCE_GROUP_DEV }}
+        resourceGroupId: ${{ env.RESOURCE_GROUP_DEV_ID }}  # Use resourceGroupId instead of resourceGroupName
         template: ./main.bicep
         parameters: ./parameters/dev.parameters.json appServiceAPIEnvVarENV=${{ vars.ENV }} appServiceAPIEnvVarDBHOST=${{ vars.DBHOST }} appServiceAPIEnvVarDBNAME=${{ vars.DBNAME }} appServiceAPIEnvVarDBPASS=${{ secrets.DBPASS }} appServiceAPIDBHostDBUSER=${{ secrets.DBUSER }} appServiceAPIDBHostFLASK_APP=${{ vars.FLASK_APP }} appServiceAPIDBHostFLASK_DEBUG=${{ vars.FLASK_DEBUG }}
         deploymentName: ${{ env.USER_ALIAS }}-dev
+      
 
   deploy-uat:
     if: github.event.pull_request.base.ref == 'main' || github.event_name == 'workflow_dispatch'
@@ -91,7 +92,7 @@ jobs:
         uses: azure/arm-deploy@v2
         with:
           subscriptionId: ${{ env.SUBSCRIPTION_ID }}
-          resourceGroupName: ${{ env.RESOURCE_GROUP_UAT }}
+          resourceGroupId: ${{ env.RESOURCE_GROUP_UAT_ID }}
           template: ./main.bicep
           parameters: ./parameters/uat.parameters.json appServiceAPIEnvVarENV=${{ vars.ENV }} appServiceAPIEnvVarDBHOST=${{ vars.DBHOST }} appServiceAPIEnvVarDBNAME=${{ vars.DBNAME }} appServiceAPIEnvVarDBPASS=${{ secrets.DBPASS }} appServiceAPIDBHostDBUSER=${{ secrets.DBUSER }} appServiceAPIDBHostFLASK_APP=${{ vars.FLASK_APP }} appServiceAPIDBHostFLASK_DEBUG=${{ vars.FLASK_DEBUG }}
           deploymentName: ${{ env.USER_ALIAS }}-uat
