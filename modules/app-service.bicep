@@ -1,4 +1,4 @@
-param location string  // Set this in parameters to avoid using resourceGroup().location
+param location string = resourceGroup().location
 param appServicePlanName string
 param appServiceAppName string
 param appServiceAPIAppName string
@@ -16,12 +16,11 @@ param appServiceAPIDBHostFLASK_DEBUG string
 ])
 param environmentType string
 
-var appServicePlanSkuName = (environmentType == 'prod') ? 'B1' : 'B1' // Adjust capacity for production if needed
+var appServicePlanSkuName = (environmentType == 'prod') ? 'B1' : 'B1' //modify according to desired capacity
 
-// App Service Plan Resource
 resource appServicePlan 'Microsoft.Web/serverFarms@2022-03-01' = {
   name: appServicePlanName
-  location: location  // Directly use the passed location
+  location: location
   sku: {
     name: appServicePlanSkuName
   }
@@ -31,12 +30,11 @@ resource appServicePlan 'Microsoft.Web/serverFarms@2022-03-01' = {
   }
 }
 
-// Backend App Service (Python)
 resource appServiceAPIApp 'Microsoft.Web/sites@2022-03-01' = {
   name: appServiceAPIAppName
-  location: location  // Directly use the passed location
+  location: location
   properties: {
-    serverFarmId: appServicePlan.id  // Link to App Service Plan
+    serverFarmId: appServicePlan.id
     httpsOnly: true
     siteConfig: {
       linuxFxVersion: 'PYTHON|3.11'
@@ -80,12 +78,11 @@ resource appServiceAPIApp 'Microsoft.Web/sites@2022-03-01' = {
   }
 }
 
-// Frontend App Service (Node.js)
 resource appServiceApp 'Microsoft.Web/sites@2022-03-01' = {
   name: appServiceAppName
-  location: location  // Directly use the passed location
+  location: location
   properties: {
-    serverFarmId: appServicePlan.id  // Link to App Service Plan
+    serverFarmId: appServicePlan.id
     httpsOnly: true
     siteConfig: {
       linuxFxVersion: 'NODE|18-lts'
