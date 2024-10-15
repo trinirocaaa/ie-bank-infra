@@ -1,4 +1,4 @@
-#run
+#run restart
 name: ie-bank-infra
 
 on:
