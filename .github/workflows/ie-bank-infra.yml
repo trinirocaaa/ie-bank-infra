@@ -17,6 +17,7 @@ env:
   SUBSCRIPTION_ID: e0b9cada-61bc-4b5a-bd7a-52c606726b3b
   USER_ALIAS: troca
 
+
 jobs:
   build:
     runs-on: ubuntu-latest
